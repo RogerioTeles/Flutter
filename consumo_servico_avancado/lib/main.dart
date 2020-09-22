@@ -1,0 +1,10 @@
+import 'package:consumo_servico_avancado/Home.dart';
+import 'package:flutter/material.dart';
+import 'Home2.dart';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Home2(),
+  ));
+}

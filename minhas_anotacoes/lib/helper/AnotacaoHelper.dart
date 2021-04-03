@@ -52,4 +52,22 @@ class AnotacaoHelper {
     int idRetornado = await bancoDados.insert(nomeTabela, anotacao.toMap());
     return idRetornado;
   }
+
+  recuperarAnotacoes() async {
+    var bancoDados = await db;
+    String sql = "SELECT * FROM $nomeTabela ORDER BY data DESC";
+    List anotacoes = await bancoDados.rawQuery(sql);
+    return anotacoes;
+  }
+
+  Future<int> alterarAnotacao(Anotacao anotacao) async {
+    //usando o metodo get db
+    var bancoDados = await db;
+    return await bancoDados.update(nomeTabela, anotacao.toMap(),
+        where: "id = ?", whereArgs: [anotacao.id]);
+  }
+
+  Future<String> deletarAnotacao(Anotacao anotacao) async {
+    var bancodados = await db;
+  }
 }

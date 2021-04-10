@@ -91,6 +91,7 @@ class _HomeState extends State<Home> {
   _salvarAtualizarAnotacao({Anotacao anotacaoSelecionada}) async {
     String titulo = _tituloController.text;
     String descricao = _descricaoController.text;
+
     if (anotacaoSelecionada == null) {
       Anotacao anotacao =
           Anotacao(titulo, descricao, DateTime.now().toString());
@@ -99,7 +100,7 @@ class _HomeState extends State<Home> {
       anotacaoSelecionada.titulo = titulo;
       anotacaoSelecionada.descricao = descricao;
       anotacaoSelecionada.data = DateTime.now().toString();
-      int resultado = await _db.alterarAnotacao(anotacaoSelecionada);
+      var resultado = await _db.alterarAnotacao(anotacaoSelecionada);
     }
     //print("data atual:" + DateTime.now().toString());
 
@@ -122,6 +123,18 @@ class _HomeState extends State<Home> {
     }
     setState(() {
       _anotacoes = listaTemporaria;
+    });
+  }
+
+  _deletarAnotacao(Anotacao anotacao) async {
+    if (anotacao != null) {
+      var apagar = await _db.apagarAnotacao(anotacao);
+    }
+  }
+
+  _confirmarDeletar(Anotacao anotacao) {
+    setState(() {
+      _deletarAnotacao(anotacao);
     });
   }
 
@@ -157,7 +170,7 @@ class _HomeState extends State<Home> {
 
               return Card(
                   child: Dismissible(
-                key: Key(anotacao.toString()),
+                key: Key(anotacao.data),
                 direction: DismissDirection.startToEnd,
                 background: Container(
                   padding: EdgeInsets.all(5),
@@ -165,14 +178,13 @@ class _HomeState extends State<Home> {
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(10)),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        )
+                      ]),
                 ),
                 child: ListTile(
                   title: Text(anotacao.titulo),
@@ -196,7 +208,46 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-                onDismissed: (direction) {},
+                onDismissed: (direction) {
+                  if (direction == DismissDirection.startToEnd) {
+                    setState(() {
+                      _confirmarDeletar(anotacao);
+                    });
+                  }
+                },
+                confirmDismiss: (DismissDirection direction) async {
+                  return await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Confirmar remoção"),
+                          content: Text(
+                              "Você tem certeza que deseja apagar essa anotação?"),
+                          actions: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                // ignore: missing_required_param
+                                // ignore: deprecated_member_use
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: Text("Cancelar"),
+                                ),
+                                // ignore: deprecated_member_use
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: Text("Apagar"),
+                                ),
+                              ],
+                            )
+                            // ignore: deprecated_member_use
+                          ],
+                        );
+                      });
+                },
               ));
             },
           ))

@@ -60,14 +60,32 @@ class AnotacaoHelper {
     return anotacoes;
   }
 
-  Future<int> alterarAnotacao(Anotacao anotacao) async {
+  Future<String> alterarAnotacao(Anotacao anotacao) async {
     //usando o metodo get db
     var bancoDados = await db;
-    return await bancoDados.update(nomeTabela, anotacao.toMap(),
-        where: "id = ?", whereArgs: [anotacao.id]);
+    try {
+      return await bancoDados.update(nomeTabela, anotacao.toMap(),
+          where: "id = ?", whereArgs: [anotacao.id]);
+    } catch (msgErro) {
+      return ("Falha ao tentar deletar banco de dados:" + msgErro);
+    }
   }
 
-  Future<String> deletarAnotacao(Anotacao anotacao) async {
-    var bancodados = await db;
+  Future<void> apagarAnotacao(Anotacao anotacao) async {
+    //usando o metodo get db
+    var bancoDados = await db;
+    try {
+      String tituloAnotacao = anotacao.titulo.toString();
+      await bancoDados.delete(nomeTabela, anotacao.toMap(),
+          where: "id = ?", whereArgs: [anotacao.id]);
+      return ("Anotação " + tituloAnotacao + " deletada com sucesso.");
+    } catch (msgErro) {
+      return ("Falha ao tentar deletar banco de dados:" + msgErro);
+    }
   }
+
+  /* Future<String> deletarAnotacao(Anotacao anotacao) async {
+    var bancoDados = await db;
+    int teste = await bancoDados.delete();
+  }*/
 }

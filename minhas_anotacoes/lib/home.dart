@@ -4,6 +4,7 @@ import 'package:minhas_anotacoes/helper/AnotacaoHelper.dart';
 //importação para formatação de data
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -167,11 +168,11 @@ class _HomeState extends State<Home> {
             itemCount: _anotacoes.length,
             itemBuilder: (context, index) {
               final anotacao = _anotacoes[index];
-              final key = _anotacoes[index].toString();
+              // final key = _anotacoes[index].id;
               return Card(
-                  color: Colors.amber,
+                  color: Colors.white,
                   child: Dismissible(
-                    key: Key(key),
+                    key: UniqueKey(),
                     direction: DismissDirection.startToEnd,
                     background: Container(
                       padding: EdgeInsets.all(5),
@@ -188,10 +189,17 @@ class _HomeState extends State<Home> {
                           ]),
                     ),
                     child: ListTile(
-                      title: Text(anotacao.titulo),
-                      subtitle: Text(_formatarData(anotacao.data) +
-                          " - " +
-                          anotacao.descricao),
+                      title: Text(anotacao.titulo,
+                          style: GoogleFonts.aBeeZee(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          )),
+                      subtitle: Text(
+                        anotacao.descricao +
+                            " - " +
+                            _formatarData(anotacao.data),
+                        style: GoogleFonts.aBeeZee(),
+                      ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[

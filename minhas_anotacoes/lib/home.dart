@@ -109,7 +109,7 @@ class _HomeState extends State<Home> {
     //limpar os campos
     _tituloController.clear();
     _descricaoController.clear();
-
+// trazer a lista de volta
     _recuperarAnotacoes();
   }
 
@@ -158,7 +158,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Minhas Anotações"),
+        title: Text(
+          "Minhas Anotações",
+          style: GoogleFonts.aBeeZee(),
+        ),
         backgroundColor: Colors.pinkAccent,
       ),
       body: Column(

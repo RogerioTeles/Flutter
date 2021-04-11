@@ -60,14 +60,14 @@ class AnotacaoHelper {
     return anotacoes;
   }
 
-  Future<String> alterarAnotacao(Anotacao anotacao) async {
+  Future<void> alterarAnotacao(Anotacao anotacao) async {
     //usando o metodo get db
     var bancoDados = await db;
     try {
       return await bancoDados.update(nomeTabela, anotacao.toMap(),
           where: "id = ?", whereArgs: [anotacao.id]);
     } catch (msgErro) {
-      return ("Falha ao tentar deletar banco de dados:" + msgErro);
+      return ("Falha ao tentar atualizar banco de dados:" + msgErro.toString());
     }
   }
 
@@ -80,7 +80,7 @@ class AnotacaoHelper {
           .delete(nomeTabela, where: "id = ?", whereArgs: [anotacao.id]);
       return ("Anotação " + tituloAnotacao + " deletada com sucesso.");
     } catch (msgErro) {
-      return ("Falha ao tentar deletar banco de dados:" + msgErro);
+      return ("Falha ao tentar deletar banco de dados:" + msgErro.toString());
     }
   }
 

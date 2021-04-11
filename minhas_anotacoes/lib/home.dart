@@ -52,6 +52,7 @@ class _HomeState extends State<Home> {
                     labelText: "Título",
                     hintText: "Digite o Título",
                   ),
+                  maxLines: null,
                 ),
                 TextField(
                   controller: _descricaoController,
@@ -60,6 +61,7 @@ class _HomeState extends State<Home> {
                     labelText: "Descrição",
                     hintText: "Digite a descrição",
                   ),
+                  maxLines: null,
                 ),
               ],
             ),

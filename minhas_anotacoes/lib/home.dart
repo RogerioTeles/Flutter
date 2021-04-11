@@ -160,7 +160,9 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text(
           "Minhas Anotações",
-          style: GoogleFonts.aBeeZee(),
+          style: GoogleFonts.aBeeZee(
+            fontSize: 24,
+          ),
         ),
         backgroundColor: Colors.pinkAccent,
       ),

@@ -133,9 +133,9 @@ class _HomeState extends State<Home> {
   }
 
   _confirmarDeletar(Anotacao anotacao) {
-    setState(() {
-      _deletarAnotacao(anotacao);
-    });
+    _deletarAnotacao(anotacao);
+
+    _recuperarAnotacoes();
   }
 
   _formatarData(String data) {
@@ -167,88 +167,88 @@ class _HomeState extends State<Home> {
             itemCount: _anotacoes.length,
             itemBuilder: (context, index) {
               final anotacao = _anotacoes[index];
-
+              final key = _anotacoes[index].toString();
               return Card(
+                  color: Colors.amber,
                   child: Dismissible(
-                key: Key(anotacao.data),
-                direction: DismissDirection.startToEnd,
-                background: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        )
-                      ]),
-                ),
-                child: ListTile(
-                  title: Text(anotacao.titulo),
-                  subtitle: Text(_formatarData(anotacao.data) +
-                      " - " +
-                      anotacao.descricao),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          _exibirTelaCadastro(anotacao: anotacao);
-                        },
-                        child: Padding(
-                            padding: EdgeInsets.only(right: 16),
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.green,
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-                onDismissed: (direction) {
-                  if (direction == DismissDirection.startToEnd) {
-                    setState(() {
-                      _confirmarDeletar(anotacao);
-                    });
-                  }
-                },
-                confirmDismiss: (DismissDirection direction) async {
-                  return await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Confirmar remoção"),
-                          content: Text(
-                              "Você tem certeza que deseja apagar essa anotação?"),
-                          actions: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                // ignore: missing_required_param
-                                // ignore: deprecated_member_use
-                                FlatButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                  child: Text("Cancelar"),
-                                ),
-                                // ignore: deprecated_member_use
-                                FlatButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: Text("Apagar"),
-                                ),
-                              ],
+                    key: Key(key),
+                    direction: DismissDirection.startToEnd,
+                    background: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.delete,
+                              color: Colors.white,
                             )
-                            // ignore: deprecated_member_use
-                          ],
-                        );
-                      });
-                },
-              ));
+                          ]),
+                    ),
+                    child: ListTile(
+                      title: Text(anotacao.titulo),
+                      subtitle: Text(_formatarData(anotacao.data) +
+                          " - " +
+                          anotacao.descricao),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              _exibirTelaCadastro(anotacao: anotacao);
+                            },
+                            child: Padding(
+                                padding: EdgeInsets.only(right: 16),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.green,
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      //no dismissible não precisa do setstate
+                      if (direction == DismissDirection.startToEnd) {
+                        _confirmarDeletar(anotacao);
+                      }
+                    },
+                    confirmDismiss: (DismissDirection direction) async {
+                      return await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Confirmar remoção"),
+                              content: Text(
+                                  "Você tem certeza que deseja apagar essa anotação?"),
+                              actions: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    // ignore: missing_required_param
+                                    // ignore: deprecated_member_use
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, false);
+                                      },
+                                      child: Text("Cancelar"),
+                                    ),
+                                    // ignore: deprecated_member_use
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                      },
+                                      child: Text("Apagar"),
+                                    ),
+                                  ],
+                                )
+                                // ignore: deprecated_member_use
+                              ],
+                            );
+                          });
+                    },
+                  ));
             },
           ))
         ],

@@ -76,8 +76,8 @@ class AnotacaoHelper {
     var bancoDados = await db;
     try {
       String tituloAnotacao = anotacao.titulo.toString();
-      await bancoDados.delete(nomeTabela, anotacao.toMap(),
-          where: "id = ?", whereArgs: [anotacao.id]);
+      await bancoDados
+          .delete(nomeTabela, where: "id = ?", whereArgs: [anotacao.id]);
       return ("Anotação " + tituloAnotacao + " deletada com sucesso.");
     } catch (msgErro) {
       return ("Falha ao tentar deletar banco de dados:" + msgErro);

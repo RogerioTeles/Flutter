@@ -1,6 +1,5 @@
 import 'package:aprenda_ingles/telas/bichos.dart';
 import 'package:aprenda_ingles/telas/numeros.dart';
-import 'package:aprenda_ingles/telas/vogais.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +15,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -44,17 +43,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 text: "Numbers",
                 //icon: Icon(),
               ),
-              Tab(
-                text: "Leters",
-                //icon: Icon(),
-              ),
             ],
           ),
         ),
         body: TabBarView(controller: _tabController, children: <Widget>[
           Bichos(),
           Numeros(),
-          Vogais(),
         ]));
   }
 }

@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp/cadastro.dart';
+
+import 'home.dart';
+import 'model/usuario.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -7,6 +11,68 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerSenha = TextEditingController();
+  String _mensagemErro = '';
+
+  _validarCampos() {
+    String email = _controllerEmail.text;
+    String senha = _controllerSenha.text;
+
+    if (email.isNotEmpty) {
+      if (senha.isNotEmpty && senha.length > 6) {
+        setState(() {
+          _mensagemErro = "";
+        });
+        Usuario usuario = Usuario();
+        usuario.email = email;
+        usuario.senha = senha;
+        _logarUsuario(usuario);
+      } else {
+        setState(() {
+          _mensagemErro = "Email ou senha incorretos1";
+        });
+      }
+    } else {
+      setState(() {
+        _mensagemErro = "Email ou senha incorretos2";
+      });
+    }
+  }
+
+  _logarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth
+        .signInWithEmailAndPassword(
+            email: usuario.email, password: usuario.senha)
+        .then((firebaseUser) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    }).catchError((erro) {
+      setState(() {
+        _mensagemErro =
+            "Erro ao tentar logar usuário, verifique email e senha e tente novamente";
+      });
+    });
+  }
+
+  _verificaUsuarioLogado() async {
+    //não está mantendo usuário logado pq tá pulando essa linha
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User usuarioLogado = auth.currentUser;
+
+    if (usuarioLogado != null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _verificaUsuarioLogado();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +94,7 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: TextField(
+                    controller: _controllerEmail,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
@@ -41,6 +108,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 TextField(
+                  controller: _controllerSenha,
                   keyboardType: TextInputType.text,
                   style: TextStyle(fontSize: 20),
                   obscureText: true,
@@ -56,7 +124,9 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.only(top: 16, bottom: 10),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _validarCampos();
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
                       onPrimary: Colors.black,
@@ -82,6 +152,15 @@ class _LoginState extends State<Login> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Cadastro()));
                     },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Center(
+                    child: Text(
+                      _mensagemErro,
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    ),
                   ),
                 )
               ],

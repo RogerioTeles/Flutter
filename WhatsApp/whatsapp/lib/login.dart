@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp/cadastro.dart';
 
@@ -56,11 +57,13 @@ class _LoginState extends State<Login> {
     });
   }
 
-  _verificaUsuarioLogado() async {
+  Future _verificaUsuarioLogado() async {
+    await Firebase.initializeApp();
     //não está mantendo usuário logado pq tá pulando essa linha
+    //era só adiconar o Firebase auth aqui, já que é a primeira coisa que roda, ele não tava pegando do main nao sei pq
     FirebaseAuth auth = FirebaseAuth.instance;
-    User usuarioLogado = auth.currentUser;
-
+    User usuarioLogado = await auth.currentUser;
+    print(usuarioLogado.email.toString());
     if (usuarioLogado != null) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     }

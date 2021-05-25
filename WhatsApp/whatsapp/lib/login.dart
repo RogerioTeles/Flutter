@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp/cadastro.dart';
+import 'package:whatsapp/routeGenerator.dart';
 
 import 'home.dart';
 import 'model/usuario.dart';
@@ -48,7 +49,7 @@ class _LoginState extends State<Login> {
         .signInWithEmailAndPassword(
             email: usuario.email, password: usuario.senha)
         .then((firebaseUser) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacementNamed(context, RouteGenerator.ROTA_HOME);
     }).catchError((erro) {
       setState(() {
         _mensagemErro =
@@ -62,10 +63,10 @@ class _LoginState extends State<Login> {
     //não está mantendo usuário logado pq tá pulando essa linha
     //era só adiconar o Firebase auth aqui, já que é a primeira coisa que roda, ele não tava pegando do main nao sei pq
     FirebaseAuth auth = FirebaseAuth.instance;
-    User usuarioLogado = await auth.currentUser;
-    print(usuarioLogado.email.toString());
+    //auth.signOut();
+    User usuarioLogado = auth.currentUser;
     if (usuarioLogado != null) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacementNamed(context, RouteGenerator.ROTA_HOME);
     }
   }
 
@@ -152,8 +153,8 @@ class _LoginState extends State<Login> {
                     ),
                     onTap: () {
                       //Abrindo a página de cadastro
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Cadastro()));
+                      Navigator.pushNamed(
+                          context, RouteGenerator.ROTA_CADASTRO);
                     },
                   ),
                 ),

@@ -1,7 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whatsapp/home.dart';
 import 'package:whatsapp/model/usuario.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:whatsapp/routeGenerator.dart';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -54,7 +57,14 @@ class _CadastroState extends State<Cadastro> {
         .createUserWithEmailAndPassword(
             email: usuario.email, password: usuario.senha)
         .then((firebaseUser) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      //Salvar dados do usuário
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      //vai salvar as informações de cadastro no banco de dados relacionados ao usuario
+      //utilizando o uid como chave
+      db.collection("usuarios").doc(firebaseUser.user.uid).set(usuario.toMap());
+      //usando o PishNamedAndRemoveUntil para resolver o problema de continuar aparecendo a seta
+      Navigator.pushNamedAndRemoveUntil(
+          context, RouteGenerator.ROTA_HOME, (_) => false);
     }).catchError((erro) {
       _mensagemErro =
           "Erro ao cadastrar usuário, valide os campos e tente novamente";
